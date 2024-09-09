@@ -1,0 +1,11 @@
+[package]
+name = "process"
+description = "High-level API to do video processing with Rust and ffmpeg's various libraries"
+version.workspace = true
+authors.workspace = true
+edition.workspace = true
+homepage.workspace = true
+repository.workspace = true
+
+[dependencies]
+rusty_ffmpeg = { version = "0.16.1", features = ["link_system_ffmpeg"] }

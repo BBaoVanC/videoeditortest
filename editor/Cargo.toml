@@ -1,0 +1,15 @@
+[package]
+name = "editor"
+description = "The program that lets you combine your script with the video processing API"
+#description.workspace = true
+version.workspace = true
+authors.workspace = true
+edition.workspace = true
+homepage.workspace = true
+repository.workspace = true
+#license.workspace = true
+
+[dependencies]
+anyhow = "1.0.87"
+snafu = "0.8.4"
+v8 = "0.106.0"

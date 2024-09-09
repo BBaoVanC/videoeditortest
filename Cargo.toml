@@ -1,6 +1,15 @@
-[package]
-name = "videoeditortest"
-version = "0.1.0"
-edition = "2021"
+[workspace]
+resolver = "2"
+members = [
+    #"editor",
+    "process",
+]
 
-[dependencies]
+[workspace.package]
+version = "0.1.0"
+authors = ["BBaoVanC <bbaovanc@bbaovanc.com>"]
+edition = "2021"
+description = "Text driven video editor"
+homepage = "https://github.com/BBaoVanC/videoeditortest"
+repository = "https://github.com/BBaoVanC/videoeditortest"
+#license = "MIT"
