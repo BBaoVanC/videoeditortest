@@ -1,0 +1,10 @@
+[package]
+name = "pipeline"
+description = "A protocol definition for an object-oriented representation of video processing operations"
+version.workspace = true
+authors.workspace = true
+edition.workspace = true
+homepage.workspace = true
+repository.workspace = true
+
+[dependencies]
