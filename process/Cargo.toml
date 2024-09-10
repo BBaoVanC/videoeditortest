@@ -9,3 +9,4 @@ repository.workspace = true
 
 [dependencies]
 rusty_ffmpeg = { version = "0.16.1", features = ["link_system_ffmpeg"] }
+snafu = "0.8.4"
