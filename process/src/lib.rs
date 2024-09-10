@@ -1,10 +1,10 @@
+use std::{
+    ffi::{c_int, CStr, CString},
+    ptr,
+};
+
 use rusty_ffmpeg::ffi as ff;
-use snafu::Snafu;
-use snafu::ResultExt;
-use std::ffi::CStr;
-use std::ffi::CString;
-use std::ffi::c_int;
-use std::ptr;
+use snafu::{ResultExt, Snafu};
 
 #[derive(Debug, Snafu)]
 #[snafu(display("raw AVError from ffmpeg: {id}: {message:?}"))]
@@ -21,6 +21,7 @@ impl AVError {
         let message_ptr = message.into_raw();
         let strerror_ret = unsafe { ff::av_strerror(id, message_ptr, MESSAGE_LEN) };
         let message = unsafe { CString::from_raw(message_ptr) };
+
         let message = if strerror_ret != 0 { None } else { Some(message) };
         Self { id, message }
     }
@@ -30,7 +31,11 @@ trait MapIntToResultAVError {
 }
 impl MapIntToResultAVError for c_int {
     fn map_averror(self) -> Result<(), AVError> {
-        if self != 0 { Err(AVError::new(self)) } else { Ok(()) }
+        if self != 0 {
+            Err(AVError::new(self))
+        } else {
+            Ok(())
+        }
     }
 }
 
@@ -56,10 +61,12 @@ impl MuxContext {
             ff::avformat_open_input(
                 &mut format_ctx_ptr,
                 url.as_ptr(),
-                ptr::null(), // TODO: allow changing input format
+                ptr::null(),     // TODO: allow changing input format
                 ptr::null_mut(), // AVDictionary of options
             )
-        }.map_averror().context(OpenInputSnafu)?;
+        }
+        .map_averror()
+        .context(OpenInputSnafu)?;
 
         todo!()
     }
