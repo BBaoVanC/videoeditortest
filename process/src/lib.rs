@@ -17,12 +17,16 @@ impl AVError {
     pub fn new(id: c_int) -> Self {
         // add 1 for null
         const MESSAGE_LEN: usize = (ff::AV_ERROR_MAX_STRING_SIZE + 1) as usize;
-        let message = CString::new([0; MESSAGE_LEN]).unwrap();
-        let message_ptr = message.into_raw();
+        let mut message = [0; MESSAGE_LEN];
+        let message_ptr = message.as_mut_ptr();
         let strerror_ret = unsafe { ff::av_strerror(id, message_ptr, MESSAGE_LEN) };
-        let message = unsafe { CString::from_raw(message_ptr) };
-
-        let message = if strerror_ret != 0 { None } else { Some(message) };
+        //let message = unsafe { CString::from_raw(message_ptr) };
+        let message = if strerror_ret != 0 {
+            None
+        } else {
+            let s = unsafe { CStr::from_ptr(message.as_ptr()) }.to_owned();
+            Some(s)
+        };
         Self { id, message }
     }
 }
@@ -40,7 +44,7 @@ impl MapIntToResultAVError for c_int {
 }
 
 pub struct MuxContext {
-    format_ctx: ff::AVFormatContext,
+    format_ctx: *mut ff::AVFormatContext,
 }
 #[derive(Debug, Snafu)]
 #[non_exhaustive]
@@ -51,7 +55,7 @@ pub enum CreateMuxContextError {
     OpenInput { source: AVError },
 }
 impl MuxContext {
-    pub fn from_url(url: &CStr) -> Result<Self, CreateMuxContextError> {
+    pub fn from_url_cstr(url: &CStr) -> Result<Self, CreateMuxContextError> {
         let mut format_ctx_ptr = unsafe { ff::avformat_alloc_context() };
         if format_ctx_ptr.is_null() {
             return Err(CreateMuxContextError::AllocAVFormat);
@@ -68,6 +72,11 @@ impl MuxContext {
         .map_averror()
         .context(OpenInputSnafu)?;
 
-        todo!()
+        Ok(Self { format_ctx: format_ctx_ptr } )
+    }
+}
+impl Drop for MuxContext {
+    fn drop(&mut self) {
+        unsafe { ff::avformat_close_input(&mut self.format_ctx) };
     }
 }

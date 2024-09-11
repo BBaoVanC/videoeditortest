@@ -1,8 +1,9 @@
 [workspace]
 resolver = "2"
 members = [ "pipeline",
-    #"editor",
+    "editor",
     "process",
+    "pipeline",
 ]
 
 [workspace.package]

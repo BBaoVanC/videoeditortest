@@ -10,5 +10,8 @@ repository.workspace = true
 #license.workspace = true
 
 [dependencies]
+process = { path = "../process" }
+
 anyhow = "1.0.87"
+clap = { version = "4.5.17", features = ["derive"] }
 snafu = "0.8.4"
