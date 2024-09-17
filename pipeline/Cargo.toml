@@ -1,6 +1,6 @@
 [package]
 name = "process"
-description = "High-level API to do video processing with Rust and ffmpeg's various libraries"
+description = "Object-oriented wrappers around ffmpeg to help create video processing pipelines"
 version.workspace = true
 authors.workspace = true
 edition.workspace = true

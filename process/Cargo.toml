@@ -1,6 +1,6 @@
 [package]
 name = "pipeline"
-description = "A protocol definition for an object-oriented representation of video processing operations"
+description = "High-level API/protocol to represent video processing operations using Rust"
 version.workspace = true
 authors.workspace = true
 edition.workspace = true
