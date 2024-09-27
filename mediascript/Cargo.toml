@@ -1,6 +1,6 @@
 [package]
-name = "pipeline"
-description = "High-level API/protocol to represent video processing operations using Rust"
+name = "mediascript"
+description = "Scripting language for performing video/audio transformations"
 version.workspace = true
 authors.workspace = true
 edition.workspace = true
@@ -8,3 +8,4 @@ homepage.workspace = true
 repository.workspace = true
 
 [dependencies]
+pipeline = { path = "../pipeline" }

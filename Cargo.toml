@@ -1,9 +1,9 @@
 [workspace]
 resolver = "2"
-members = [ "pipeline",
+members = [
     "editor",
-    "process",
     "pipeline",
+    "mediascript",
 ]
 
 [workspace.package]
