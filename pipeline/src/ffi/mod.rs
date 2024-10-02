@@ -65,7 +65,8 @@ impl FormatContext {
 }
 impl Drop for FormatContext {
     fn drop(&mut self) {
-        unsafe { ff::avformat_close_input(&mut self.format_ctx) };
+        // TODO: close correctly
+        //unsafe { ff::avformat_close_input(&mut self.format_ctx) };
     }
 }
 
