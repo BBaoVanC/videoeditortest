@@ -44,40 +44,59 @@ impl MapIntToResultAVError for c_int {
 }
 
 #[derive(Debug)]
-pub struct MuxContext {
+pub struct FormatContext {
     format_ctx: *mut ff::AVFormatContext,
 }
 #[derive(Debug, Snafu)]
 #[non_exhaustive]
-pub enum CreateMuxContextError {
-    #[snafu(display("error allocating MuxContext"))]
+pub enum AllocFormatContextError {
+    #[snafu(display("error allocating FormatContext"))]
     AllocAVFormat,
-    #[snafu(display("error opening input: {source}"))]
-    OpenInput { source: AVError },
 }
-impl MuxContext {
-    pub fn from_url_cstr(url: &CStr) -> Result<Self, CreateMuxContextError> {
-        let mut format_ctx_ptr = unsafe { ff::avformat_alloc_context() };
+impl FormatContext {
+    pub fn new() -> Result<Self, AllocFormatContextError> {
+        let format_ctx_ptr = unsafe { ff::avformat_alloc_context() };
         if format_ctx_ptr.is_null() {
-            return Err(CreateMuxContextError::AllocAVFormat);
+            return Err(AllocFormatContextError::AllocAVFormat);
         }
 
+        Ok(Self { format_ctx: format_ctx_ptr } )
+    }
+}
+impl Drop for FormatContext {
+    fn drop(&mut self) {
+        unsafe { ff::avformat_close_input(&mut self.format_ctx) };
+    }
+}
+
+#[derive(Debug)]
+pub struct InputContext {
+    inner: FormatContext,
+}
+impl InputContext {
+    /// takes in a freshly allocated [`FormatContext`] from [`FormatContext::new`]
+    pub fn new(mut ctx: FormatContext, url: &CStr) -> Result<Self, AVError> {
         unsafe {
             ff::avformat_open_input(
-                &mut format_ctx_ptr,
+                &mut ctx.format_ctx,
                 url.as_ptr(),
                 ptr::null(),     // TODO: allow changing input format
                 ptr::null_mut(), // AVDictionary of options
             )
         }
-        .map_averror()
-        .context(OpenInputSnafu)?;
-
-        Ok(Self { format_ctx: format_ctx_ptr } )
+        .map_averror()?;
+        Ok(Self { inner: ctx })
     }
 }
-impl Drop for MuxContext {
-    fn drop(&mut self) {
-        unsafe { ff::avformat_close_input(&mut self.format_ctx) };
+
+#[derive(Debug)]
+pub struct OutputContext {
+    inner: FormatContext,
+}
+impl OutputContext {
+    /// takes in a freshly allocated [`FormatContext`] from [`FormatContext::new`]
+    pub fn new(mut ctx: FormatContext, url: &CStr) -> Result<Self, AVError> {
+        ctx = todo!();
+        Ok(Self { inner: ctx })
     }
 }
