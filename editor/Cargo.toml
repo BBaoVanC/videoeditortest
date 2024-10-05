@@ -1,6 +1,6 @@
 [package]
 name = "editor"
-description = "The program that lets you combine your script with the video processing API"
+description = "GUI application for running video scripts"
 #description.workspace = true
 version.workspace = true
 authors.workspace = true
