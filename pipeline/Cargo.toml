@@ -1,6 +1,6 @@
 [package]
 name = "pipeline"
-description = "Object-oriented wrappers around ffmpeg to help create video processing pipelines"
+description = "[mediascript] Object-oriented wrappers around ffmpeg to help create video processing pipelines"
 version.workspace = true
 authors.workspace = true
 edition.workspace = true

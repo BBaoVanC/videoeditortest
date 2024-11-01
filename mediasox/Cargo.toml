@@ -1,6 +1,6 @@
 [package]
-name = "mediascript"
-description = "Scripting language for performing video/audio transformations"
+name = "mediasox"
+description = "MediaScript library for audio manipulation using SoX"
 version.workspace = true
 authors.workspace = true
 edition.workspace = true
@@ -8,4 +8,3 @@ homepage.workspace = true
 repository.workspace = true
 
 [dependencies]
-pipeline = { path = "../pipeline" }
