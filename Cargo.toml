@@ -4,9 +4,9 @@ members = [
     "editor",
     "pipeline",
 
-    "mediaseq",
+    #"mediaseq",
     "mediacomp",
-    "mediasox",
+    #"mediasox",
 ]
 
 [workspace.package]
