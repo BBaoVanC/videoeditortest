@@ -1,6 +1,6 @@
 [package]
-name = "mediacomp"
-description = "MediaScript library for 2D compositing of video"
+name = "mediascript"
+description = "Standard library for media editing with mediascript"
 version.workspace = true
 authors.workspace = true
 edition.workspace = true
