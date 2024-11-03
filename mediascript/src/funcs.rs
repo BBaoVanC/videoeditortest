@@ -1,33 +1,44 @@
 use crate::TimeRational;
 
+use itertools::Itertools;
+
 /// this function will panic if format is malformed! or if there are overflows
 ///
-/// 01:02:03;(4/60) = 1 hour, 2 minutes, 3 seconds, and 4 frames @ 60 fps
+/// `01:02:03;(4/60)` = 1 hour, 2 minutes, 3 seconds, and 4 frames @ 60 fps
+///
+/// ```
+/// # use mediascript::funcs::time;
+/// # use mediascript::TimeRational;
+/// let t0 = time("01:02:03;(4/60)");
+/// assert_eq!(t0, TimeRational::new(1, 2, 3, (4, 60)));
+/// ```
 pub fn time(s: &str) -> TimeRational {
-    // could be written better with itertools collect_tuple
-    let s_split = s.split(':');
-    let hours = s_split[0];
-    let mins = s_split[1];
-    let secs_frac = s_split[2];
+    let (hours, mins, secs_frac) = s.split(':').collect_tuple().unwrap();
+    let (secs, frac) = secs_frac.split(';').collect_tuple().unwrap();
 
-    let secs_frac_split = secs_frac.split(';').collect();
-    let secs = secs_frac_split[0];
-    let frac = secs_frac_split[1];
-    assert!(frac[0] == '(');
-    assert!(frac.last() == ')');
-    let frac = frac[1..frac.len()];
-    let frac_split = frac.split();
-    let subsec_num = frac_split[0];
-    let subsec_denom = frac_split[1];
+    let mut frac_chars = frac.chars();
+    frac_chars.next();
+    frac_chars.next_back();
+    let (subsec_num, subsec_denom) = frac_chars.as_str().split('/').collect_tuple().unwrap();
 
     let hours: i32 = hours.parse().unwrap();
     let mins: i32 = mins.parse().unwrap();
     let secs: i32 = secs.parse().unwrap();
     let subsec_num: i32 = subsec_num.parse().unwrap();
-    let subsec_denom: i32 = subsec_denom.parse().unwrap();
+    let subsec_denom: u32 = subsec_denom.parse().unwrap();
 
     TimeRational::new(hours, mins, secs, (subsec_num, subsec_denom))
 }
 // TODO: tests
 
 //fold_seq
+
+//#[cfg(test)]
+//mod tests {
+//    use super::*;
+//
+//    #[test]
+//    fn time_parse() {
+//        assert_eq!(time("01"));
+//    }
+//}

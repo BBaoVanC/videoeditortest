@@ -2,7 +2,7 @@ use std::fmt;
 
 pub mod funcs;
 
-// Duration that is rational.
+/// A point in time, including a fractional subsecond component.
 #[derive(Debug, Hash, PartialEq, Eq, Clone, Copy)]
 pub struct TimeRational {
     second: i32,
@@ -10,7 +10,8 @@ pub struct TimeRational {
     subsec: (i32, u32),
 }
 impl TimeRational {
-    pub fn new(hours: i32, minutes: i32, seconds: i32, subsec: (i32, i32)) -> Self {
+    /// Construct from basic time units. The tuple `subsec` is just `(numerator, denominator)`.
+    pub fn new(hours: i32, minutes: i32, seconds: i32, subsec: (i32, u32)) -> Self {
         Self {
             second: (hours * 60 * 60) + (minutes * 60) + seconds,
             subsec,
