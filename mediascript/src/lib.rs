@@ -2,7 +2,6 @@ use std::fmt;
 
 // Duration that is rational.
 #[derive(Debug, Hash, PartialEq, Eq, Clone, Copy)]
-// TODO: impl Display
 pub struct TimeRational {
     second: i32,
     // fraction
@@ -15,7 +14,7 @@ impl fmt::Display for TimeRational {
         let mins = minsec % 60;
         let secs = minsec - (minsec * 60);
         let (frac_num, frac_denom) = self.subsec;
-        write!(f, "{hours:02}:{mins:02}:{secs:02} + ({frac_num}/{frac_denom})")
+        write!(f, "{hours:02}:{mins:02}:{secs:02}+({frac_num}/{frac_denom})")
     }
 }
 
@@ -24,18 +23,20 @@ pub mod mark {
     use crate::TimeRational;
 
     /// An identifier attached to an event
-    #[derive(Debug, Hash, PartialEq, Eq, Clone)]
+    #[derive(Debug, Clone)]
     pub struct MarkIdent {
         name: String, // TODO: ref, and Copy
     }
 
     /// A singular point where something of interest happens; a point of interest.
+    #[derive(Debug, Clone)]
     pub struct Mark {
         ident: MarkIdent,
         center: TimeRational,
     }
 
     /// A section of time where something of interest happens.
+    #[derive(Debug, Clone)]
     pub struct MarkSpan {
         ident: MarkIdent,
         // the logical "zero" of the event
@@ -45,14 +46,32 @@ pub mod mark {
     }
 }
 
-pub mod containers {
+pub mod justify {
+
+}
+
+pub mod format {
     use crate::TimeRational;
 
-    /// fixed-length stream of media
-    pub trait MediaStreamFixed {
-        type Output;
-        fn length() -> TimeRational;
+    /// open a container using ffmpeg url/filename
+    pub struct FFDemux {
+        url: String,
     }
+
+
+    /// open a container for output, using ffmpeg url format
+    pub struct FFMux {
+        url: String,
+
+    }
+}
+
+pub mod stream {
+    /// A stream of media that is flexibily sized
+    pub trait StreamFlexible {}
+
+    /// A stream of media that is fixed-length
+    pub trait StreamFixed {}
 }
 
 pub mod video_comp {

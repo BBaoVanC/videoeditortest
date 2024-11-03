@@ -3,9 +3,10 @@ resolver = "2"
 members = [
     "editor",
     "pipeline",
+    "mediascript",
 
     #"mediaseq",
-    "mediacomp",
+    #"mediacomp",
     #"mediasox",
 ]
 
