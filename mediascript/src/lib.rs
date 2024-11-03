@@ -12,6 +12,8 @@ pub struct TimeRational {
 impl TimeRational {
     /// Construct from basic time units. The tuple `subsec` is just `(numerator, denominator)`.
     pub fn new(hours: i32, minutes: i32, seconds: i32, subsec: (i32, u32)) -> Self {
+        // TODO: nonzerousize?
+        assert!(seconds != 0);
         Self {
             second: (hours * 60 * 60) + (minutes * 60) + seconds,
             subsec,
@@ -23,10 +25,10 @@ impl TimeRational {
 }
 impl fmt::Display for TimeRational {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        let hours = self.second % 60;
-        let minsec = self.second - (hours * 60);
-        let mins = minsec % 60;
-        let secs = minsec - (minsec * 60);
+        let secs = self.second % 60;
+        let mins = self.second / 60 % 60;
+        let hours = self.second / 60 / 60 % 60;
+
         let (frac_num, frac_denom) = self.subsec;
         write!(f, "{hours:02}:{mins:02}:{secs:02}+({frac_num}/{frac_denom})")
     }
