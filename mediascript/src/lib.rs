@@ -1,27 +1,14 @@
 use std::fmt;
+use std::collections::{BTreeMap, HashMap};
 
 pub mod funcs;
 
 /// A point in time, including a fractional subsecond component.
 #[derive(Debug, Hash, PartialEq, Eq, Clone, Copy)]
 pub struct TimeRational {
-    second: i32,
-    // fraction
-    subsec: (i32, u32),
-}
-impl TimeRational {
-    /// Construct from basic time units. The tuple `subsec` is just `(numerator, denominator)`.
-    pub fn new(hours: i32, minutes: i32, seconds: i32, subsec: (i32, u32)) -> Self {
-        // TODO: nonzerousize?
-        assert!(seconds != 0);
-        Self {
-            second: (hours * 60 * 60) + (minutes * 60) + seconds,
-            subsec,
-        }
-    }
-    //pub fn from_str(s: &str) -> Self {
-    //    s.split(":");
-    //}
+    pub second: i32,
+    /// fraction component
+    pub subsec: (i32, u32),
 }
 impl fmt::Display for TimeRational {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
@@ -34,64 +21,47 @@ impl fmt::Display for TimeRational {
     }
 }
 
-//// this would mainly be used for i.e. annotating source files
-//pub mod mark {
-//    use crate::TimeRational;
-//
-//    use std::collections::{BTreeMap, HashMap};
-//
-//    #[derive(Debug, Clone, PartialEq, Eq)]
-//    pub enum MarkData {
-//        String(String),
-//        Int(i32),
-//        Bool(bool),
-//    }
-//
-//    /// A singular point where something of interest happens; a point of interest.
-//    ///
-//    /// A mark can hold freeform data that can be used to template things.
-//    #[derive(Debug, Clone)]
-//    pub struct Mark {
-//        center: TimeRational,
-//        data: MarkData,
-//    }
-//    impl Mark {
-//        // TODO: data not string
-//        pub fn new(center: TimeRational, data: HashMap<String, MarkData>) -> Self {
-//            Self { center, data }
-//        }
-//        pub fn new_empty_data(center: TimeRational) -> Self { Self { center, data: HashMap::new() } }
-//        /// Returns the time relative to whatever context/scope the mark is in.
-//        pub fn get_rel_time(&self) -> TimeRational { self.center }
-//    }
-//    ///
-//    /// A scope where identifiers are connected together. WIthin a scope, there cannot be multiple
-//    /// marks with the same name.
-//    ///
-//    /// TODO: could be named MarkContext?
-//    #[derive(Debug, Clone)]
-//    pub struct MarkScope {
-//        marks: BTreeMap<String, Mark>,
-//    }
-//    impl MarkScope {
-//        //pub fn from_map(marks: BTreeMap<String, Mark>) -> Self { Self { marks } }
-//        pub fn from_static(marks: &[(&'static str, Mark)]) -> Self {
-//            Self { marks: BTreeMap::from(marks) }
-//        }
-//        //pub fn get_mark
-//    }
-//
-//    ///// A section of time where something of interest happens.
-//    //#[derive(Debug, Clone)]
-//    //pub struct MarkSpan {
-//    //    ident: MarkIdent,
-//    //    // the logical "zero" of the event
-//    //    center: Mark,
-//    //    before: TimeRational,
-//    //    after: TimeRational,
-//    //}
+
+/// Metadata that can be associated with a marker. See doc on [`Mark`] for why this is useful.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum MarkData {
+    String(String),
+    Int(i32),
+    Bool(bool),
+}
+
+/// An object marking a point in time where something happens; represents a point of interest that
+/// you might want to edit with respect to.
+///
+/// Marks don't make sense on their own. They have to be used in context of some time sequence,
+/// such as a [`MediaStream`]. Therefore, the [`center`] field is a relative timecode in respect to
+/// the timeline that holds the mark.
+///
+/// A mark can hold freeform data, TODO: example
+#[derive(Debug, Clone)]
+pub struct Mark {
+    /// time relative to the semantic structure that holds this mark
+    pub center: TimeRational,
+    /// metadata
+    pub data: MarkData,
+}
+
+///// A section of time where something of interest happens.
+//#[derive(Debug, Clone)]
+//pub struct MarkSpan {
+//    ident: MarkIdent,
+//    // the logical "zero" of the event
+//    center: Mark,
+//    before: TimeRational,
+//    after: TimeRational,
 //}
-//
+
+
+/// Represents a clip with a fixed length of time. It can render through the included callback
+#[derive(Debug)]
+pub struct StreamFixed
+
+
 ///// could be called stream or justify, it's for justifying[1] media clips in to a single stream
 /////
 ///// [1]: justification as in similar to what it means in the latex world
