@@ -19,9 +19,8 @@ impl AVError {
         const MESSAGE_LEN: usize = (ff::AV_ERROR_MAX_STRING_SIZE + 1) as usize;
         let mut message = [0; MESSAGE_LEN];
         let message_ptr = message.as_mut_ptr();
-        let strerror_ret = unsafe { ff::av_strerror(id, message_ptr, MESSAGE_LEN) };
         //let message = unsafe { CString::from_raw(message_ptr) };
-        let message = if strerror_ret != 0 {
+        let message = if unsafe { ff::av_strerror(id, message_ptr, MESSAGE_LEN) } < 0 {
             None
         } else {
             let s = unsafe { CStr::from_ptr(message.as_ptr()) }.to_owned();
@@ -35,7 +34,7 @@ trait MapIntToResultAVError {
 }
 impl MapIntToResultAVError for c_int {
     fn map_averror(self) -> Result<(), AVError> {
-        if self != 0 {
+        if self < 0 {
             Err(AVError::new(self))
         } else {
             Ok(())
