@@ -1,14 +1,17 @@
 use std::fmt;
 use std::collections::{BTreeMap, HashMap};
+use std::num::NonZero;
 
-pub mod funcs;
+//pub mod funcs;
+
+pub mod media;
 
 /// A point in time, including a fractional subsecond component.
 #[derive(Debug, Hash, PartialEq, Eq, Clone, Copy)]
 pub struct TimeRational {
     pub second: i32,
     /// fraction component
-    pub subsec: (i32, u32),
+    pub subsec: (i32, NonZero<u32>),
 }
 impl fmt::Display for TimeRational {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
@@ -55,11 +58,6 @@ pub struct Mark {
 //    before: TimeRational,
 //    after: TimeRational,
 //}
-
-
-/// Represents a clip with a fixed length of time. It can render through the included callback
-#[derive(Debug)]
-pub struct StreamFixed
 
 
 ///// could be called stream or justify, it's for justifying[1] media clips in to a single stream
