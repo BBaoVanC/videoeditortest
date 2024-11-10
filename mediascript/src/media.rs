@@ -23,5 +23,6 @@ pub trait SeekPrecise {
     fn seek(&mut self, dst: TimeRational) -> Result<(), Self::Error>;
 }
 
-pub trait VideoFlex {
+/// A fixed-length video clip
+pub struct VideoClipFixed {
 }
