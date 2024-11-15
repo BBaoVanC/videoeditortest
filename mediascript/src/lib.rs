@@ -4,15 +4,21 @@ use std::num::NonZero;
 
 //pub mod funcs;
 
+/// monads for opening media files
 pub mod container;
+/// monads for dealing with media streams and rendering
 pub mod media;
+/// a time management system with good full justification
+pub mod sequence;
+/// layout system for creating graphical systems that fill screen space
+pub mod layout;
 
 /// A point in time, including a fractional subsecond component.
 #[derive(Debug, Hash, PartialEq, Eq, Clone, Copy)]
 pub struct TimeRational {
     pub second: i32,
     /// fraction component
-    pub subsec: (i32, NonZero<u32>),
+    pub frac: (i32, NonZero<u32>),
 }
 impl fmt::Display for TimeRational {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
@@ -20,7 +26,7 @@ impl fmt::Display for TimeRational {
         let mins = self.second / 60 % 60;
         let hours = self.second / 60 / 60 % 60;
 
-        let (frac_num, frac_denom) = self.subsec;
+        let (frac_num, frac_denom) = self.frac;
         write!(f, "{hours:02}:{mins:02}:{secs:02}+({frac_num}/{frac_denom})")
     }
 }

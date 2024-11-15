@@ -1,3 +1,9 @@
 //! Objects for muxing and demuxing media containers
 
-pub trait
+pub struct MkvContainer {
+}
+impl MkvContainer {
+    pub fn open(path: &str) -> Result<Self, !> {
+    }
+    pub fn get_video(id
+}
