@@ -13,7 +13,7 @@ pub struct AVError {
     message: Option<CString>,
 }
 impl AVError {
-    // See https://ffmpeg.org/doxygen/7.0/group__lavu__error.html#ga5792b4a2d18d7d9cb0efbcfc335dce24
+    /// See https://ffmpeg.org/doxygen/7.0/group__lavu__error.html#ga5792b4a2d18d7d9cb0efbcfc335dce24
     pub fn new(id: c_int) -> Self {
         // add 1 for null
         const MESSAGE_LEN: usize = (ff::AV_ERROR_MAX_STRING_SIZE + 1) as usize;
@@ -42,24 +42,19 @@ impl MapIntToResultAVError for c_int {
     }
 }
 
+#[derive(Debug, Snafu)]
+#[snafu(display("error allocating some context in ffmpeg"))]
+pub struct AllocContextError;
+
 #[derive(Debug)]
 pub struct FormatContext {
-    format_ctx: *mut ff::AVFormatContext,
-}
-#[derive(Debug, Snafu)]
-#[non_exhaustive]
-pub enum AllocFormatContextError {
-    #[snafu(display("error allocating FormatContext"))]
-    AllocAVFormat,
+    inner: *mut ff::AVFormatContext,
 }
 impl FormatContext {
-    pub fn new() -> Result<Self, AllocFormatContextError> {
-        let format_ctx_ptr = unsafe { ff::avformat_alloc_context() };
-        if format_ctx_ptr.is_null() {
-            return Err(AllocFormatContextError::AllocAVFormat);
-        }
-
-        Ok(Self { format_ctx: format_ctx_ptr } )
+    pub fn alloc() -> Result<Self, AllocContextError> {
+        let ptr = unsafe { ff::avformat_alloc_context() };
+        if ptr.is_null() { return Err(AllocContextError); };
+        Ok(Self { inner: ptr } )
     }
 }
 impl Drop for FormatContext {
@@ -78,7 +73,7 @@ impl InputContext {
     pub fn new(mut ctx: FormatContext, url: &CStr) -> Result<Self, AVError> {
         unsafe {
             ff::avformat_open_input(
-                &mut ctx.format_ctx,
+                &mut ctx.inner,
                 url.as_ptr(),
                 ptr::null(),     // TODO: allow changing input format
                 ptr::null_mut(), // AVDictionary of options
@@ -89,14 +84,14 @@ impl InputContext {
     }
 }
 
-#[derive(Debug)]
-pub struct OutputContext {
-    inner: FormatContext,
-}
-impl OutputContext {
-    /// takes in a freshly allocated [`FormatContext`] from [`FormatContext::new`]
-    pub fn new(mut ctx: FormatContext, url: &CStr) -> Result<Self, AVError> {
-        ctx = todo!();
-        Ok(Self { inner: ctx })
-    }
-}
+//#[derive(Debug)]
+//pub struct OutputContext {
+//    inner: FormatContext,
+//}
+//impl OutputContext {
+//    /// takes in a freshly allocated [`FormatContext`] from [`FormatContext::new`]
+//    pub fn new(mut ctx: FormatContext, url: &CStr) -> Result<Self, AVError> {
+//        ctx = todo!();
+//        Ok(Self { inner: ctx })
+//    }
+//}
