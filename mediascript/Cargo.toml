@@ -10,3 +10,5 @@ repository.workspace = true
 [dependencies]
 regex = "1.11.1"
 snafu = "0.8.5"
+
+ffrust = { path = "../ffrust" }

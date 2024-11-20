@@ -186,6 +186,14 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "60b1af1c220855b6ceac025d3f6ecdd2b7c4894bfe9cd9bda4fbb4bc7c0d4cf0"
 
 [[package]]
+name = "ffrust"
+version = "0.1.0"
+dependencies = [
+ "rusty_ffmpeg",
+ "snafu",
+]
+
+[[package]]
 name = "glob"
 version = "0.3.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -238,8 +246,8 @@ checksum = "a7a70ba024b9dc04c27ea2f0c0548feb474ec5c54bba33a7f72f873a39d07b24"
 name = "mediascript"
 version = "0.1.0"
 dependencies = [
+ "ffrust",
  "regex",
- "rusty_ffmpeg",
  "snafu",
 ]
 

@@ -1,5 +1,5 @@
 [package]
-name = "pipeline"
+name = "ffrust"
 description = "[mediascript] Object-oriented wrappers around ffmpeg to help create video processing pipelines"
 version.workspace = true
 authors.workspace = true

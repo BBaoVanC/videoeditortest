@@ -5,9 +5,7 @@ use std::num::NonZero;
 use std::collections::HashMap;
 use std::fs::{OpenOptions, File};
 
-/// Structures for ffmpeg FFI
-// TODO: remove pub
-pub mod ffi;
+use ffrust as ffr;
 
 ///// Abstract, tree-based system for media transformations. Everything in this module is monads.
 /////

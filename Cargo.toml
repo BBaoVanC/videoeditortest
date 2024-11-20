@@ -2,7 +2,7 @@
 resolver = "2"
 members = [
     "editor",
-    #"pipeline",
+    "ffrust",
     "mediascript",
 
     #"mediaseq",
