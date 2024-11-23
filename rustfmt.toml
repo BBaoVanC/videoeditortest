@@ -7,3 +7,7 @@ imports_granularity = "Crate"
 group_imports = "StdExternalCrate"
 
 enum_discrim_align_threshold = 16
+
+blank_lines_upper_bound = 2
+
+use_small_heuristics = "Max"
