@@ -87,3 +87,19 @@ impl fmt::Display for TimeRational {
         write!(f, "{hours:02}:{mins:02}:{secs:02}+({frac_num}/{frac_denom})")
     }
 }
+
+#[cfg(test)]
+mod test {
+    use crate::TimeRational;
+    use crate::Fraction;
+    use std::num::NonZero;
+
+    #[test]
+    fn time_rational_format() {
+        // 1 hour + 23 minutes + 17 seconds = 4997 seconds
+        // 4997 * 60 = 299820 frames @ 60 fps
+        let time = TimeRational(Fraction { num: 299839, denom: NonZero::new(60).unwrap() });
+        let formatted = format!("{}", time);
+        assert_eq!(formatted, "01:23:17+(19/60)");
+    }
+}
