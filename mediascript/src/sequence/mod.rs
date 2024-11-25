@@ -3,7 +3,7 @@ use crate::Fraction;
 
 /// A fixed-length segment of multiplexed media
 pub trait ClipFixedLength {
-    fn length(&self) -> Fraction;
+    fn length(&self) -> TimeRational;
 }
 
 pub struct ClipConstantVelocity<T: ClipFixedLength> {
@@ -11,5 +11,7 @@ pub struct ClipConstantVelocity<T: ClipFixedLength> {
     velocity: Fraction,
 }
 impl<T: ClipFixedLength> ClipFixedLength for ClipConstantVelocity<T> {
-    fn length(&self) { self.clip.length() * self.velocity }
+    fn length(&self) -> TimeRational {
+        TimeRational(self.clip.length().0 * self.velocity)
+    }
 }
