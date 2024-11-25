@@ -52,7 +52,7 @@ impl Runtime {
 //    //pub fn get_output_file(&mut self, path
 //}
 
-#[derive(Debug, PartialEq, Eq, Hash, Clone, Copy)]
+#[derive(Debug, PartialEq, /*Eq,*/ Hash, Clone, Copy)]
 pub struct Fraction {
     /// numerator
     pub num: i64,
@@ -69,9 +69,11 @@ impl std::ops::Mul for Fraction {
         }
     }
 }
+// FIXME: implement PartialEq manually to compare if they are equivalent, even if different
+// denominators
 
 /// A point in time, including a fractional subsecond component.
-#[derive(Debug, PartialEq, Eq, Hash, Clone, Copy)]
+#[derive(Debug, PartialEq, /*Eq,*/ Hash, Clone, Copy)]
 pub struct TimeRational(pub Fraction);
 impl fmt::Display for TimeRational {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
@@ -93,6 +95,22 @@ mod test {
     use crate::TimeRational;
     use crate::Fraction;
     use std::num::NonZero;
+
+    #[ignore = "this is wrong because velocity should be division, not multiplication"]
+    #[test]
+    fn fraction_mul_no_common_factor() {
+        let length = Fraction { num: 21, denom: NonZero::new(2).unwrap() }; // 10.5 seconds
+        let velocity = Fraction { num: 1, denom: NonZero::new(8).unwrap() }; // 1/8 speed
+        assert_eq!(length * velocity, Fraction { num: 21, denom: NonZero::new(16).unwrap() });
+    }
+
+    #[ignore = "common factor equality checks are not yet implemented"]
+    #[test]
+    fn fraction_mul_common_factor() {
+        let length = Fraction { num: 100, denom: NonZero::new(60).unwrap() }; // 10.5 seconds
+        let velocity = Fraction { num: 1, denom: NonZero::new(4).unwrap() }; // 1/8 speed
+        assert_eq!(length * velocity, Fraction { num: 5, denom: NonZero::new(12).unwrap() });
+    }
 
     #[test]
     fn time_rational_format() {
