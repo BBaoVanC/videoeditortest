@@ -6,13 +6,6 @@ pub trait Segment {
     fn length(&self) -> TimeRational;
 }
 
-/// Methods to help actually render frames
-pub struct SelectFrame<T: Segment> {
-    segment: T,
-
-}
-impl SelectFrame {
-}
 
 //pub struct ClipConstantVelocity<T: Segment> {
 //    clip: T,
