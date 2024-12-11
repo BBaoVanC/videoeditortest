@@ -7,20 +7,11 @@ use std::fs::{OpenOptions, File};
 
 use ffrust as ffr;
 
-///// Abstract, tree-based system for media transformations. Everything in this module is monads.
-/////
-///// It makes caching easier.
-//pub mod tree;
-
-///// Types and functions for actually processing the abstract tree
-//pub mod runtime;
 
 /// monads for opening media files
 pub mod container;
-/// a time management system with good full justification
-pub mod sequence;
-///// layout system for creating graphical systems that fill screen space
-//pub mod layout;
+///// a time management system with good full justification
+//pub mod sequence;
 
 #[derive(Debug, PartialEq, /*Eq,*/ Hash, Clone, Copy)]
 pub struct Fraction {
