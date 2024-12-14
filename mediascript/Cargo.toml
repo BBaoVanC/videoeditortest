@@ -8,7 +8,8 @@ homepage.workspace = true
 repository.workspace = true
 
 [dependencies]
+ffrust = { path = "../ffrust" }
+
+num-rational = "0.4.2"
 regex = "1.11.1"
 snafu = "0.8.5"
-
-ffrust = { path = "../ffrust" }
