@@ -16,7 +16,7 @@ pub mod container;
 
 
 /// A number representing a point in time.
-#[derive(Debug, PartialEq, /*Eq,*/ Hash, Clone, Copy)]
+#[derive(Debug, PartialEq, /* Eq, */ Hash, Clone, Copy)]
 pub struct TimeRational(pub Ratio<i64>);
 impl fmt::Display for TimeRational {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
@@ -35,8 +35,9 @@ impl fmt::Display for TimeRational {
 
 #[cfg(test)]
 mod tests {
-    use crate::TimeRational;
     use num_rational::Ratio;
+
+    use crate::TimeRational;
 
     #[test]
     fn time_rational_formatting() {

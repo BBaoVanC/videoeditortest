@@ -1,8 +1,6 @@
 //! Utilities for dealing with ffmpeg/libav API
 
-use std::ffi::CStr;
-use std::ffi::c_int;
-use std::ffi::CString;
+use std::ffi::{c_int, CStr, CString};
 
 use rusty_ffmpeg::ffi as av;
 use snafu::Snafu;
