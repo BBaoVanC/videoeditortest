@@ -2,12 +2,16 @@ use std::fmt;
 
 use num_rational::Ratio;
 
-use ffrust as ffr;
+
+pub mod av_util;
+
+///// Re-export of [`rusty_ffmpeg`] bindings
+//pub use rusty_ffmpeg::ffi as libav;
 
 
-/// monads for opening media files
+// monads for opening media files
 pub mod container;
-///// a time management system with good full justification
+//// a time management system with good full justification
 //pub mod sequence;
 
 

@@ -8,8 +8,7 @@ homepage.workspace = true
 repository.workspace = true
 
 [dependencies]
-ffrust = { path = "../ffrust" }
-
 num-rational = "0.4.2"
 regex = "1.11.1"
+rusty_ffmpeg = { version = "0.16.1", features = ["link_system_ffmpeg"] }
 snafu = "0.8.5"
