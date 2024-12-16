@@ -1,6 +1,10 @@
 //! Monads for muxing and demuxing media containers
 
 use std::{ffi::CStr, ptr};
+use std::thread;
+use std::sync::mpsc;
+use std::sync::{Arc, Mutex};
+use std::collections::VecDeque;
 
 use rusty_ffmpeg::ffi as av;
 
@@ -19,15 +23,18 @@ pub trait MediaSource {
 // fn read
 
 
-/// Handle to an input media file. Basically like an
-/// [`Iterator`][std::iter::Iterator] but yields frames of media instead.
+/// Handle to an input media file. Basically like an [`Iterator`] but yields
+/// frames of media instead.
 // FIXME: buffering i/o on other thread
 // FIXME: possibly async api instead
 #[derive(Debug)]
-pub struct MediaFileSource {
-    ctx: *mut av::AVFormatContext,
+pub struct InputFile {
+    /// signal to the i/o thread whether to stop
+    stop_tx: mpsc::Sender<()>,
+    /// buffers packets from the i/o thread which is blocking in ffmpeg
+    queue: Arc<Mutex<VecDeque<av::AVPacket>>>,
 }
-impl MediaFileSource {
+impl InputFile {
     pub fn open_cstr(url: &CStr) -> Result<Self, AVError> {
         let mut ctx = ptr::null_mut();
         unsafe {
@@ -42,10 +49,29 @@ impl MediaFileSource {
         debug_assert!(!ctx.is_null());
 
         unsafe { av::avformat_find_stream_info(ctx, ptr::null_mut()).map_averror()? };
+
+        let queue = Arc::new(Mutex::new(VecDeque::new()));
+        // TODO: should this be synchronous so Drop is synchronous?
+        let (stop_tx, stop_rx) = mpsc::channel();
+
+        // TODO: handle error instead of panic using Builder::spawn
+        thread::spawn(move || {
+            let queue = &queue;
+            loop {
+                match stop_rx.try_recv() {
+                    Ok(_) | Err(mpsc::TryRecvError::Disconnected) => break,
+                    Err(mpsc::TryRecvError::Empty) => {
+                        unsafe { av::
+                        queue.
+                    }
+                }
+            }
+        });
+
         Ok(Self { ctx })
     }
 }
-impl Drop for MediaFileSource {
+impl Drop for InputFile {
     fn drop(&mut self) {
         let ptr = &raw mut self.ctx;
         unsafe { av::avformat_close_input(ptr) };
