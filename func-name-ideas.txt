@@ -1,0 +1,2 @@
+VideoClip.partition_by(TimeRational)
+VideoSeq.splits_seq
