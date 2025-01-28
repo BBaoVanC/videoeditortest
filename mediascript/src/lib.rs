@@ -29,7 +29,8 @@ impl fmt::Display for Timecode {
     }
 }
 
-pub struct Timespan
+pub struct Interval {
+}
 
 
 pub trait Render {
